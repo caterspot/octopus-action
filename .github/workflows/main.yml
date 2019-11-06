@@ -1,0 +1,22 @@
+name: CI
+
+on: 
+  push:
+    branches:
+        - staging
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: cappistrano deploy
+        uses: boom-internet/octopus-action@master
+        with:
+          app: caterspot_admin_app
+          aws_key: ${{ secrets.AWS_KEY }}
+          aws_secret: ${{ secrets.AWS_SECRET }}
+          environment: staging
+          github_key: ${{ secrets.GITHUB_KEY }}
+

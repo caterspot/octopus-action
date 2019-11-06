@@ -1,0 +1,42 @@
+# action.yml
+name: 'Caterspot Deployment'
+description: 'Caterspot Deployment'
+author: 'Faizal Zakaria'
+inputs:
+  app:
+    description: 'Name of the app, ex: caterspot_admin_app'
+    required: true
+  aws_key:
+    description: 'AWS key'
+    required: true
+  aws_secret:
+    description: 'AWS Secret'
+    required: true
+  github_key:
+    description: 'Github key'
+    required: true
+  environment:
+    description: 'App environment'
+  bastion_user:
+    description: 'Bastion User'
+  bastion_host:
+    description: 'Bastion Host'
+  octopus_repo:
+    description: 'Octopus Repo | Capistrano Deployment repo'
+
+outputs:
+  result:
+    description: 'Result'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.app }}
+    - ${{ inputs.aws_key }}
+    - ${{ inputs.aws_secret }}
+    - ${{ inputs.github_key }}
+    - ${{ inputs.environment }}
+    - ${{ inputs.bastion_user }}
+    - ${{ inputs.bastion_host }}
+    - ${{ inputs.octopus_repo }}

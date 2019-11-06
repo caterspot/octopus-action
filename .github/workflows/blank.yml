@@ -1,0 +1,34 @@
+name: TEST
+
+on: [deployment]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: cap staging deploy
+      uses: boom-internet/octopus-action@master
+      with:
+        app: caterspot_admin_app
+        aws_key: ${{ secrets.AWS_KEY }}
+        aws_secret: ${{ secrets.AWS_SECRET }}
+        github_key: ${{ secrets.GITHUB_KEY }}
+        environment: staging
+      if: github.ref == 'refs/heads/master'
+    - name: cap production deploy
+      uses: boom-internet/octopus-action@master
+      with:
+        app: caterspot_admin_app
+        aws_key: ${{ secrets.AWS_KEY }}
+        aws_secret: ${{ secrets.AWS_SECRET }}
+        github_key: ${{ secrets.GITHUB_KEY }}
+        environment: production
+      if: github.ref == 'refs/heads/production'
+    - name: update deploy status
+      if: always()
+      uses: unacast/actions-github-deployment-status@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
