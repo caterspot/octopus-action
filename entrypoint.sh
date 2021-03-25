@@ -58,4 +58,7 @@ fi
 echo "bundle exec cap ${ENVIRONMENT} deploy $OPTS ..."
 bundle exec cap ${ENVIRONMENT} deploy $OPTS
 
+echo "bundle exec cap ${ENVIRONMENT} asg:scale $OPTS ..."
+bundle exec cap ${ENVIRONMENT} asg:scale $OPTS
+
 echo 'ok'
