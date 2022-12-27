@@ -1,5 +1,5 @@
 # Container image that runs your code
-FROM ruby:2.5-alpine3.10
+FROM ruby:2.7.5
 LABEL maintainer "Faizal Zakaria<faizal@caterspot.com>"
 
 RUN apk add --no-cache git openssh build-base
