@@ -4,7 +4,7 @@ LABEL maintainer "Faizal Zakaria<faizal@caterspot.com>"
 
 RUN apk add --no-cache git openssh build-base
 
-RUN gem install bundler
+RUN gem install bundler -v '1.17.3'
 
 COPY entrypoint.sh /entrypoint.sh
 
