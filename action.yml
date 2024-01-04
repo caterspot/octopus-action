@@ -23,6 +23,8 @@ inputs:
     description: 'Bastion Host'
   octopus_repo:
     description: 'Octopus Repo | Capistrano Deployment repo'
+  github_token:
+    description: 'Github token'
 
 outputs:
   result:
@@ -40,3 +42,4 @@ runs:
     - ${{ inputs.bastion_user }}
     - ${{ inputs.bastion_host }}
     - ${{ inputs.octopus_repo }}
+    - ${{ inputs.github_token }}

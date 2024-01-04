@@ -12,6 +12,7 @@ ENVIRONMENT=$5
 BASTION_USER=$6
 BASTION_HOST=$7
 OCTOPUS_REPO=$8
+GITHUB_TOKEN=$9
 
 echo "Setting up ssh ..."
 
@@ -53,6 +54,9 @@ if [ ! -z "$BASTION_USER" ]; then
 fi
 if [ ! -z "$AWS_KEY" ]; then
     OPTS=${OPTS}${OPTS:+ }"AWS_ACCESS_KEY_ID=${AWS_KEY} AWS_SECRET_ACCESS_KEY=${AWS_SECRET}"
+fi
+if [ ! -z "$GITHUB_TOKEN" ]; then
+    OPTS=${OPTS}${OPTS:+ }GITHUB_TOKEN=${GITHUB_TOKEN}
 fi
 
 echo "bundle exec cap ${ENVIRONMENT} deploy $OPTS ..."
