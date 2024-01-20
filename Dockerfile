@@ -1,14 +1,9 @@
 # Container image that runs your code
 FROM ruby:2.7.5-alpine
 
-# Version Pin
-ENV RUBY_BUNDLER_VERSION=1.17.3
-
 LABEL maintainer "Faizal Zakaria<faizal@caterspot.com>"
 
-RUN apk add --no-cache git openssh build-base
-
-RUN gem install bundler -v $RUBY_BUNDLER_VERSION
+RUN apk add --no-cache --upgrade git openssh build-base aws-cli jq nodejs npm yarn bash
 
 COPY entrypoint.sh /entrypoint.sh
 

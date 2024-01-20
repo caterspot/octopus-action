@@ -12,17 +12,23 @@ inputs:
   aws_secret:
     description: 'AWS Secret'
     required: true
+  aws_account:
+    description: 'AWS account'
+    required: true
+  aws_region:
+    description: 'AWS region'
+    required: true
   github_key:
     description: 'Github key'
     required: true
   environment:
     description: 'App environment'
-  bastion_user:
-    description: 'Bastion User'
-  bastion_host:
-    description: 'Bastion Host'
-  octopus_repo:
-    description: 'Octopus Repo | Capistrano Deployment repo'
+    required: true
+  version:
+    description: 'App version'
+    required: true
+  infra_repo:
+    description: 'CaterSpot Infra Repo'
 
 outputs:
   result:
@@ -35,8 +41,9 @@ runs:
     - ${{ inputs.app }}
     - ${{ inputs.aws_key }}
     - ${{ inputs.aws_secret }}
+    - ${{ inputs.aws_account }}
+    - ${{ inputs.aws_region }}
     - ${{ inputs.github_key }}
     - ${{ inputs.environment }}
-    - ${{ inputs.bastion_user }}
-    - ${{ inputs.bastion_host }}
-    - ${{ inputs.octopus_repo }}
+    - ${{ inputs.version }}
+    - ${{ inputs.infra_repo }}

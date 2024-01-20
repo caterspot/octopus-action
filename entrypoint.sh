@@ -1,17 +1,18 @@
-#!/bin/sh -l
+#!/bin/sh
 
 set -e
 
 echo "Setup variables ..."
 
 APP=$1
-AWS_KEY=$2
-AWS_SECRET=$3
-GITHUB_KEY=$4
-ENVIRONMENT=$5
-BASTION_USER=$6
-BASTION_HOST=$7
-OCTOPUS_REPO=$8
+AWS_ACCESS_KEY_ID=$2
+AWS_SECRET_ACCESS_KEY=$3
+AWS_ACCOUNT=$4
+AWS_DEFAULT_REGION=$5
+GITHUB_KEY=$6
+ENVIRONMENT=$7
+VERSION=$8
+INFRA_REPO=$9
 
 echo "Setting up ssh ..."
 
@@ -32,33 +33,23 @@ echo "Setting up ssh agent ..."
 eval `ssh-agent -s`
 ssh-add /root/.ssh/id_rsa
 
-echo "Cloning Octopus ... "
-git clone -b master --single-branch ${OCTOPUS_REPO} octopus
-cd octopus
+echo "Cloning Infra ... "
+git clone -b master --single-branch ${INFRA_REPO} caterspot_infra
+cd caterspot_infra/cdk/caterspot
 
-echo "Bundle install ..."
+echo "Installing dependencies ..."
+yarn install
 
-# Needed for openssh
-bundle add ed25519
-bundle add bcrypt_pbkdf
-bundle install
-echo "Deploying ..."
+echo "Deploying ${APP} to ${ENVIRONMENT} ..."
+export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 
-OPTS=""
-if [ ! -z "$APP" ]; then
-    OPTS=${OPTS}${OPTS:+ }APP=${APP}
+if [ "${APP}" = "project_tracker" ]; then
+  # scripts/cdk-to-${ENVIRONMENT}.sh deploy --exclusively ProjectTrackerServiceStack --parameters ProjectTrackerServiceStack:ImageVersion=${VERSION}
+  # scripts/cdk-to-${ENVIRONMENT}.sh deploy --exclusively SidekiqServiceStack --parameters SidekiqServiceStack:ImageVersion=${VERSION}
+  scripts/cdk-to-staging.sh deploy --exclusively ProjectTrackerServiceStack --parameters ProjectTrackerServiceStack:ImageVersion=${VERSION}
+  scripts/cdk-to-staging.sh deploy --exclusively SidekiqServiceStack --parameters SidekiqServiceStack:ImageVersion=${VERSION}
 fi
-if [ ! -z "$BASTION_USER" ]; then
-    OPTS=${OPTS}${OPTS:+ }"VIA_BASTION=1 BASTION_USER=${BASTION_USER} BASTION_HOST=${BASTION_HOST}"
-fi
-if [ ! -z "$AWS_KEY" ]; then
-    OPTS=${OPTS}${OPTS:+ }"AWS_ACCESS_KEY_ID=${AWS_KEY} AWS_SECRET_ACCESS_KEY=${AWS_SECRET}"
-fi
-
-echo "bundle exec cap ${ENVIRONMENT} deploy $OPTS ..."
-bundle exec cap ${ENVIRONMENT} deploy $OPTS
-
-echo "bundle exec cap ${ENVIRONMENT} asg:scale $OPTS ..."
-bundle exec cap ${ENVIRONMENT} asg:scale $OPTS
 
 echo 'ok'
