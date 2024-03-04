@@ -12,6 +12,7 @@ ENVIRONMENT=$5
 BASTION_USER=$6
 BASTION_HOST=$7
 OCTOPUS_REPO=$8
+OCTOPUS_BRANCH=$9
 
 echo "Setting up ssh ..."
 
@@ -33,7 +34,7 @@ eval `ssh-agent -s`
 ssh-add /root/.ssh/id_rsa
 
 echo "Cloning Octopus ... "
-git clone -b master --single-branch ${OCTOPUS_REPO} octopus
+git clone -b ${OCTOPUS_BRANCH} --single-branch ${OCTOPUS_REPO} octopus
 cd octopus
 
 echo "Bundle install ..."

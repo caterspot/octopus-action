@@ -23,6 +23,8 @@ inputs:
     description: 'Bastion Host'
   octopus_repo:
     description: 'Octopus Repo | Capistrano Deployment repo'
+  octopus_branch:
+    description: 'Octopus Branch'
 
 outputs:
   result:
@@ -40,3 +42,4 @@ runs:
     - ${{ inputs.bastion_user }}
     - ${{ inputs.bastion_host }}
     - ${{ inputs.octopus_repo }}
+    - ${{ inputs.octopus_branch || 'master' }}
