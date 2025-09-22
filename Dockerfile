@@ -1,12 +1,13 @@
 # Container image that runs your code
-FROM ruby:2.7.5-alpine
+FROM ruby:3.1.4-alpine
 
 # Version Pin
-ENV RUBY_BUNDLER_VERSION=1.17.3
+ENV RUBY_BUNDLER_VERSION=2.4.10
 
-LABEL maintainer "Faizal Zakaria<faizal@caterspot.com>"
+LABEL maintainer "Taufek Johar<taufek@caterspot.com>"
 
-RUN apk add --no-cache git openssh build-base
+RUN apk add --no-cache git openssh build-base \
+  build-base libxml2-dev
 
 RUN gem install bundler -v $RUBY_BUNDLER_VERSION
 
