@@ -1,0 +1,25 @@
+name: "Notify #engineers on PR"
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+jobs:
+  notify:
+    if: ${{ github.event.label.name == 'for review' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Notify Slack
+        run: |
+          raw_title=$(
+          cat <<"EOF"
+          ${{ github.event.pull_request.title }}
+          EOF
+          )
+          title=$(echo $raw_title | sed "s/'/\\\'/g" | sed 's/"/\\\"/g')
+          data='{"text":"<!subteam^STUPBNEN5> Pull request opened by <https://github.com/${{ github.event.pull_request.user.login }}|${{ github.event.pull_request.user.login }}>\n<${{ github.event.pull_request.html_url }}|${{ github.event.repository.name }} #${{ github.event.pull_request.number }} '"$title"'>"}'
+          curl -X POST -H 'Content-type: application/json' --data "$data" ${{ secrets.SLACK_WEBHOOK_URL_ENGINEERS }}
