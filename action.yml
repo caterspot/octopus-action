@@ -25,6 +25,10 @@ inputs:
     description: 'Octopus Repo | Capistrano Deployment repo'
   octopus_branch:
     description: 'Octopus Branch'
+  bastion_ssm_tag:
+    description: 'Value of the bastion EC2 instance''s Name tag, to tunnel through via AWS SSM Session Manager (omit to use direct SSH to bastion_host). Resolved to an instance ID at deploy time, so this keeps working across instance replacement.'
+  bastion_ssm_region:
+    description: 'AWS region the bastion_ssm_tag instance lives in (required when bastion_ssm_tag is set)'
 
 outputs:
   result:
@@ -43,3 +47,5 @@ runs:
     - ${{ inputs.bastion_host }}
     - ${{ inputs.octopus_repo }}
     - ${{ inputs.octopus_branch || 'master' }}
+    - ${{ inputs.bastion_ssm_tag }}
+    - ${{ inputs.bastion_ssm_region }}
